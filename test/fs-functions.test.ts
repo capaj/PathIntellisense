@@ -1,95 +1,89 @@
-import * as assert from 'assert';
-import { getPath, Mapping } from '../src/utils/fs-functions';
+import * as assert from 'assert'
+import { getPath, Mapping } from '../src/utils/fs-functions'
 
-suite("GetPath", () => {
-    test("resolves folder", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "./sub/";
+suite('GetPath', () => {
+  test('resolves folder', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = './sub/'
 
-        const resolved = getPath(fileNameUnix, text);
-        
-        assert.equal(resolved, "/Users/dummy/src/sub/");
-    });
+    const resolved = getPath(fileNameUnix, text)
 
-    test("resolves absolute path to root if no rootPath defined", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "/sub/";
+    assert.equal(resolved, '/Users/dummy/src/sub/')
+  })
 
-        const resolved = getPath(fileNameUnix, text);
-        
-        assert.equal(resolved, "/sub/");
-    });
+  test('resolves absolute path to root if no rootPath defined', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = '/sub/'
 
-    test("resolves / to root if no rootPath defined", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "/";
+    const resolved = getPath(fileNameUnix, text)
 
-        const resolved = getPath(fileNameUnix, text);
-        
-        assert.equal(resolved, "/");
-    });
+    assert.equal(resolved, '/sub/')
+  })
 
-    test("resolves absoute path to workspace if rootPath defined", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "/sub/";
-        const rootPath = "/Users/dummy";
+  test('resolves / to root if no rootPath defined', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = '/'
 
-        const resolved = getPath(fileNameUnix, text, rootPath);
-        
-        assert.equal(resolved, "/Users/dummy/sub/");
-    });
+    const resolved = getPath(fileNameUnix, text)
 
-    test("resolves folder up", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "../src/";
+    assert.equal(resolved, '/')
+  })
 
-        const resolved = getPath(fileNameUnix, text);
-        
-        assert.equal(resolved, "/Users/dummy/src/");
-    });
+  test('resolves absoute path to workspace if rootPath defined', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = '/sub/'
+    const rootPath = '/Users/dummy'
 
-    test("ignores everything after last slash", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "./myfile";
+    const resolved = getPath(fileNameUnix, text, rootPath)
 
-        const resolved = getPath(fileNameUnix, text);
-        
-        assert.equal(resolved, "/Users/dummy/src/");
-    });
+    assert.equal(resolved, '/Users/dummy/sub/')
+  })
 
-    test("replaces mapping if found", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "~/src/";
-        const mappings: Mapping[] = [
-            { key: "~", value: "/root/" }
-        ];
+  test('resolves folder up', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = '../src/'
 
-        const resolved = getPath(fileNameUnix, text, null, mappings);
-        
-        assert.equal(resolved, "/root/src/");
-    });
+    const resolved = getPath(fileNameUnix, text)
 
-    test("replaces mapping multiple chars if found", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "awesome/src/sub/";
-        const mappings: Mapping[] = [
-            { key: "awesome", value: "/root/" }
-        ];
+    assert.equal(resolved, '/Users/dummy/src/')
+  })
 
-        const resolved = getPath(fileNameUnix, text, null, mappings);
-        
-        assert.equal(resolved, "/root/src/sub/");
-    });
+  test('ignores everything after last slash', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = './myfile'
 
-    test("ignores mapping if not found", () => {
-        const fileNameUnix = "/Users/dummy/src/dummy.ts";
-        const text = "./sub/";
-        const mappings: Mapping[] = [
-            { key: "~", value: "/root/" }
-        ];
+    const resolved = getPath(fileNameUnix, text)
 
-        const resolved = getPath(fileNameUnix, text, null, mappings);
-        
-        assert.equal(resolved, "/Users/dummy/src/sub/");
-    });
-});
+    assert.equal(resolved, '/Users/dummy/src/')
+  })
+
+  test('replaces mapping if found', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = '~/src/'
+    const mappings: Mapping[] = [{ key: '~', value: '/root/' }]
+
+    const resolved = getPath(fileNameUnix, text, null, mappings)
+
+    assert.equal(resolved, '/root/src/')
+  })
+
+  test('replaces mapping multiple chars if found', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = 'awesome/src/sub/'
+    const mappings: Mapping[] = [{ key: 'awesome', value: '/root/' }]
+
+    const resolved = getPath(fileNameUnix, text, null, mappings)
+
+    assert.equal(resolved, '/root/src/sub/')
+  })
+
+  test('ignores mapping if not found', () => {
+    const fileNameUnix = '/Users/dummy/src/dummy.ts'
+    const text = './sub/'
+    const mappings: Mapping[] = [{ key: '~', value: '/root/' }]
+
+    const resolved = getPath(fileNameUnix, text, null, mappings)
+
+    assert.equal(resolved, '/Users/dummy/src/sub/')
+  })
+})
